@@ -1,0 +1,34 @@
+.status-active {
+    color: #08979C; // Đang hiệu lực - xanh lá
+    border: 1px solid #08979C;
+}
+
+.status-expired {
+    color: #8A8B8D; // Hết hiệu lực - xám nhạt
+    border: 1px solid #8A8B8D;
+}
+
+.status-failed {
+    color: #FAAD14; // Không thành công - đỏ
+    border: 1px solid #FAAD14;
+}
+
+.status-processing {
+    color: #1677FF; // Đang xử lý - vàng
+    border: 1px solid #1677FF;
+}
+
+.status-canceled {
+    color: #F5222D; // Đã hủy - xám đậm
+    border: 1px solid #F5222D;
+}
+
+.status-renew {
+    color: #4096FF; // Tái tục - xanh dương
+    border: 1px solid #4096FF;
+}
+
+.status-default {
+    color: #8A8B8D; // Mặc định - xám nhạt
+    border: 1px solid #8A8B8D;
+}

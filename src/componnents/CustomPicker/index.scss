@@ -1,0 +1,38 @@
+.layout-header {
+    padding: 0.8rem !important;
+    border-top-left-radius: 0.8rem !important;
+    border-top-right-radius: 0.8rem !important;
+    background-color: #fff !important;
+    border-bottom: 1px solid #3333331A;
+}
+
+.layout-body {
+    background-color: #fff !important;
+    padding: 0 !important;
+}
+
+.layout-header__btn-close {
+    left: 0.45rem !important;
+    right: '' !important;
+}
+
+.layout-header__title {
+    font-weight: 500 !important;
+    max-width: fit-content !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+}
+
+.at-float-layout--active .at-float-layout__container {
+    border-top-left-radius: 0.8rem !important;
+    border-top-right-radius: 0.8rem !important;
+}
+
+// components/index.scss
+.dropdown-arrow {
+    width: 16px; // Tương đương w-4 (4 * 4px = 16px)
+    height: 16px; // Tương đương h-4
+    border-bottom: 2px solid #2b6cb0; // Tương đương border-blue-700
+    border-right: 2px solid #2b6cb0;
+    transform: rotate(45deg); // Xoay 45 độ để tạo mũi tên
+}

@@ -1,0 +1,26 @@
+// index.scss
+
+// Ẩn thanh cuộn ngang nhưng vẫn cho phép cuộn
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    /* IE và Edge */
+    scrollbar-width: none;
+
+    /* Firefox */
+    &::-webkit-scrollbar {
+        display: none;
+        /* Chrome, Safari, và Opera */
+    }
+}
+
+
+.divider {
+    border-bottom: 1px solid #e5e7eb;
+    /* Tương đương border-gray-200 */
+    margin-top: 8px;
+    /* Tương đương mt-2 */
+}
+
+.renew-button {
+    border: 1px solid #1e90ff; // Độ dày 2px, màu xanh (tương đương blue-500)
+}

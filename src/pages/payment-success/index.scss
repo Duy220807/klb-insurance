@@ -1,0 +1,8 @@
+.payment-divider {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    margin: 0.4rem -0.4rem;
+    border-bottom: none; // Bỏ border dashed mặc định
+    height: 0.1rem; // Giữ độ dày
+    background: linear-gradient(to right, #e5e7eb 0.8rem, transparent 0.4rem); // 10px nét gạch, 10px khoảng trống
+    background-size: 1.2rem 0.1rem; // Tổng chiều dài chu kỳ (10px gạch + 10px trống)
+}

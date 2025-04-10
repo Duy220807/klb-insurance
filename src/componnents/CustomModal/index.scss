@@ -1,0 +1,28 @@
+.layout-header {
+    padding: 0.8rem !important;
+    border-top-left-radius: 0.8rem !important;
+    border-top-right-radius: 0.8rem !important;
+    background-color: #fff !important;
+    border-bottom: 1px solid #3333331A;
+}
+
+.layout-body {
+    background-color: #F7F7F9 !important;
+}
+
+.layout-header__btn-close {
+    left: 0.45rem !important;
+    right: '' !important;
+}
+
+.layout-header__title {
+    font-weight: 500 !important;
+    max-width: fit-content !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+}
+
+.at-float-layout--active .at-float-layout__container {
+    border-top-left-radius: 0.8rem !important;
+    border-top-right-radius: 0.8rem !important;
+}

@@ -1,0 +1,59 @@
+.weui-tabbar {
+    padding: 0.4rem 0 !important;
+}
+
+.weui-tabbar__icon {
+    width: 1.2rem !important;
+    height: 1.2rem !important;
+}
+
+.weui-tabbar__label {
+    font-size: 0.6rem !important;
+    font-weight: 400 !important;
+}
+
+.border-blue {
+    border: 1px solid #292663;
+}
+
+.border-cyan {
+    border: 1px solid #1e90ff;
+}
+
+.border-left {
+    border-left: 4px solid #73D13D;
+    padding-left: 16px;
+}
+
+.border-gray {
+    border: 1px solid #3333331A
+}
+
+.at-activity-indicator__content {
+    font-weight: 400 !important;
+    font-size: 0.8rem !important;
+}
+
+.taro-checkbox_checked {
+    margin: 0 auto !important;
+    min-width: 1rem !important;
+    min-height: 1rem !important;
+    width: 1rem !important;
+    height: 1rem !important;
+    color: #1F1A5B !important;
+    top: 0.1rem !important
+}
+
+.taro-modal__text {
+    font-weight: 400 !important;
+    word-break: break-word !important;
+}
+
+.taro-model__cancel {
+    font-weight: 400 !important;
+}
+
+.taro-model__confirm {
+    font-weight: 400 !important;
+    color: #1F1A5B !important;
+}

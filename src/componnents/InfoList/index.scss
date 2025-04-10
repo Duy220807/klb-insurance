@@ -1,0 +1,14 @@
+.label-container {
+    max-width: 50%;
+    /* Giới hạn chiều rộng tối đa của label (có thể điều chỉnh) */
+    white-space: normal;
+    /* Cho phép xuống hàng */
+    overflow-wrap: break-word;
+    /* Đảm bảo từ dài sẽ xuống hàng */
+}
+
+.value-container {
+    max-width: 50%;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
