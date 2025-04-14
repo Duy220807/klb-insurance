@@ -1,26 +1,22 @@
-// components/CustomInput.jsx
-import { View, Text, Input, Image } from '@tarojs/components'; // Thêm Image
+import { View, Text, Input, Image, type InputProps } from '@tarojs/components'; // Thêm InputProps
 import { useState, useEffect, useRef } from 'react';
 import './index.scss';
+import clearIcon from '../../assets/icons/clear.svg';
 
-// Import icon từ local (điều chỉnh đường dẫn theo cấu trúc dự án của bạn)
-import clearIcon from '../../assets/icons/clear.svg'; // Ví dụ đường dẫn
-
-// Định nghĩa interface cho props
 interface CustomInputProps {
     placeholder: string;
     value?: string;
     onChange?: (value: string) => void;
     required?: boolean;
     disabled?: boolean;
+    type?: keyof InputProps.Type; // Sử dụng keyof InputProps.Type
 }
 
-const CustomInput = ({ placeholder, value = '', onChange, required, disabled = false }: CustomInputProps) => {
+const CustomInput = ({ placeholder, value = '', onChange, required, disabled = false, type = 'text' }: CustomInputProps) => {
     const [inputValue, setInputValue] = useState(value);
     const [isFocused, setIsFocused] = useState(false);
     const inputRef = useRef<any>(null);
 
-    // Đồng bộ inputValue với prop value từ parent
     useEffect(() => {
         setInputValue(value);
     }, [value]);
@@ -50,12 +46,11 @@ const CustomInput = ({ placeholder, value = '', onChange, required, disabled = f
         }
     };
 
-    // Hàm xóa giá trị input
     const handleClear = () => {
         if (disabled) return;
         setInputValue('');
         if (onChange) onChange('');
-        inputRef.current.focus(); // Giữ focus sau khi xóa
+        inputRef.current.focus();
     };
 
     return (
@@ -65,7 +60,6 @@ const CustomInput = ({ placeholder, value = '', onChange, required, disabled = f
                 onClick={handleContainerClick}
             >
                 <View className="relative flex-1">
-                    {/* Placeholder */}
                     <Text
                         className={`absolute left-0 transition-[bottom,transform,font-size] duration-200 ease-in-out ${isFocused || inputValue
                             ? 'text-xs text-gray-500 bottom-1'
@@ -76,8 +70,8 @@ const CustomInput = ({ placeholder, value = '', onChange, required, disabled = f
                         {required && <Text> (<span className="text-red-500"> * </span>)</Text>}
                     </Text>
 
-                    {/* Input */}
                     <Input
+                        type={type}
                         ref={inputRef}
                         value={inputValue}
                         onInput={handleChange}
@@ -88,7 +82,6 @@ const CustomInput = ({ placeholder, value = '', onChange, required, disabled = f
                     />
                 </View>
 
-                {/* Icon xóa từ local */}
                 {inputValue && !disabled && (
                     <View
                         className="ml-2 flex items-center justify-center w-5 h-5 cursor-pointer"
@@ -97,7 +90,7 @@ const CustomInput = ({ placeholder, value = '', onChange, required, disabled = f
                         <Image
                             src={clearIcon}
                             className="w-full h-full"
-                            mode="aspectFit" // Đảm bảo icon hiển thị đúng tỷ lệ
+                            mode="aspectFit"
                         />
                     </View>
                 )}

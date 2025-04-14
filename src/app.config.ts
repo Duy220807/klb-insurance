@@ -1,23 +1,25 @@
 
 export default {
   pages: [
-    'pages/index', // Trang chủ
-    'pages/category', // Danh mục
-    'pages/account', // Tài khoản
-    'pages/protect', // Tài khoản
-    '/pages/about-motorbike', // Trang chi tiết bảo hiểm TNDS xe máy
-    '/pages/about-car', // Trang chi tiết bảo hiểm TNDS ô tô
-    '/pages/about-car-damage', // Trang chi tiết bảo hiểm THVC ô tô
-    '/pages/register', // Trang đăng ký mua bảo hiểm
-    '/pages/vehicle-details', // Trang chi tiết xe
-    '/pages/buyer-info', // Trang thông tin bên mua và chủ xe
-    '/pages/confirm', // Trang thông tin final
-    '/pages/payment', // Trang thông tin thanh toán
-    '/pages/payment-success', // Trang thanh toán thành công
-    '/pages/contracts', // Trang hợp đồng của tôi
-    '/pages/contract-detail', // Trang chi tiết hợp đồng
-    'pages/404', // Trang 404
-    'pages/certificate', // Trang chi tiết giấy chứng nhận bảo hiểm
+    'pages/index',
+    'pages/vouchers',
+    'pages/contract-carts',
+    'pages/protect',
+    // 'pages/extras', // Thêm trang extras
+    'pages/about-motorbike',
+    'pages/about-car',
+    'pages/about-car-damage',
+    'pages/register',
+    'pages/vehicle-details',
+    'pages/buyer-info',
+    'pages/confirm',
+    'pages/payment',
+    'pages/payment-success',
+    'pages/contracts',
+    'pages/contract-detail',
+    'pages/404',
+    'pages/maintenance',
+    'pages/certificate',
   ],
   window: {
     backgroundTextStyle: 'light',
@@ -36,9 +38,10 @@ export default {
         text: 'Trang chủ', // Tên tab
         iconPath: 'assets/icons/home.svg', // Icon khi không được chọn
         selectedIconPath: 'assets/icons/home-active.svg', // Icon khi được chọn
+
       },
       {
-        pagePath: 'pages/category',
+        pagePath: 'pages/vouchers',
         text: 'Túi voucher',
         iconPath: 'assets/icons/voucher.svg',
         selectedIconPath: 'assets/icons/voucher-active.svg',
@@ -50,7 +53,7 @@ export default {
         selectedIconPath: 'assets/icons/triangle-round-rectangle-active.svg',
       },
       {
-        pagePath: 'pages/account',
+        pagePath: 'pages/contract-carts',
         text: 'Giỏ hợp đồng',
         iconPath: 'assets/icons/doc-search-two.svg',
         selectedIconPath: 'assets/icons/doc-search-two-active.svg',

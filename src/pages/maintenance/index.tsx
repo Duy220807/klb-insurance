@@ -1,7 +1,7 @@
 import { View, Text, Image } from '@tarojs/components';
 import { navigateTo } from '@tarojs/taro';
 import CustomButton from 'src/componnents/CustomButton';
-import NotFoundImage from './../../assets/images/soon.png'; // Giả sử bạn có một hình ảnh 404
+import NotFoundImage from './../../assets/images/soon_.png'; // Giả sử bạn có một hình ảnh 404
 
 const NotFoundPage = () => {
     const handleBackToHome = () => {
@@ -19,7 +19,7 @@ const NotFoundPage = () => {
 
                 {/* Tiêu đề */}
                 <Text className="text-xl font-semibold text-primary mb-1 text-center">
-                    Chức năng đang triển khai
+                    Chức năng đang bảo trì
                 </Text>
 
                 {/* Mô tả */}

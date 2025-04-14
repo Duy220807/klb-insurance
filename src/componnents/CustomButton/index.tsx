@@ -19,7 +19,7 @@ const CustomButton = ({ title, onClick, type = 'primary', disabled = false }) =>
             }`,
         secondary: `bg-gray-200 text-primary py-1/2 rounded-sm text-center text-base font-bold shadow-none border-none ${disabled ? 'opacity-50 cursor-not-allowed' : ''
             }`,
-        tertiary: `bg-gray-200 text-gray-600 py-1/2 text-center text-base font-normal shadow-none border-none ${disabled ? 'opacity-50 cursor-not-allowed' : ''
+        tertiary: `bg-gray-200 text-gray-600 py-1/2 rounded-none text-center text-base font-normal shadow-none border-none ${disabled ? 'opacity-50 cursor-not-allowed' : ''
             }`,
     };
 

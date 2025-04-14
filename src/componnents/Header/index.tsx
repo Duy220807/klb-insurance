@@ -32,7 +32,7 @@ export default class Header extends Component<PropsWithChildren<HeaderProps>> {
 
         return (
             <View
-                className="relative flex items-end justify-center h-14 pb-2" // Thay items-center thành items-end và thêm pb-2
+                className="relative flex items-end justify-center h-16 pb-2" // Thay items-center thành items-end và thêm pb-2
                 style={{
                     backgroundImage: `url(${HeaderBackground})`,
                     backgroundSize: 'cover',

@@ -9,6 +9,7 @@ import Taro from '@tarojs/taro';
 import './index.scss';
 import Step from 'src/componnents/Steps';
 import { navigateToPage } from 'src/utils/navigate';
+import CustomDatePicker from 'src/componnents/CustomDatePicker';
 
 const BuyerInfo = () => {
     const [buyerType, setBuyerType] = useState('Cá nhân');
@@ -155,7 +156,7 @@ const BuyerInfo = () => {
             {/* Nội dung chính với padding để tránh bị che */}
             <View className="pt-32 pb-20 min-h-screen">
                 <View className="m-4">
-                    <View className="border-left block mb-8">
+                    <View className="border-left block mb-6">
                         <Text className="text-base mb-1 block">Thông tin bên mua bảo hiểm</Text>
                         <Text className="text-xs font-normal text-gray-500 block">
                             Nhập các thông tin bắt buộc (*) của bên mua bảo hiểm
@@ -191,7 +192,7 @@ const BuyerInfo = () => {
                                 />
                             </View>
                             <View className="mt-4">
-                                <CustomInput
+                                <CustomDatePicker
                                     placeholder="Ngày sinh (DD/MM/YYYY)"
                                     value={birthDate}
                                     onChange={setBirthDate}
@@ -201,6 +202,7 @@ const BuyerInfo = () => {
                             </View>
                             <View className="mt-4">
                                 <CustomInput
+                                    type='number'
                                     placeholder="Số giấy tờ tùy thân"
                                     value={idNumber}
                                     onChange={setIdNumber}
@@ -213,6 +215,7 @@ const BuyerInfo = () => {
                                     title="Giới tính"
                                     placeholder="Chọn giới tính"
                                     options={genderOptions}
+                                    value={gender} // Truyền giá trị gender
                                     onChange={setGender}
                                     required
                                     disabled={isBuyerOwner}
@@ -234,6 +237,7 @@ const BuyerInfo = () => {
                             </View>
                             <View className="mt-4">
                                 <CustomInput
+                                    type='number'
                                     placeholder="Mã số thuế"
                                     value={taxCode}
                                     onChange={setTaxCode}
@@ -246,6 +250,7 @@ const BuyerInfo = () => {
 
                     <View className="mt-4">
                         <CustomInput
+                            type='number'
                             placeholder="Số điện thoại"
                             value={phone}
                             onChange={setPhone}

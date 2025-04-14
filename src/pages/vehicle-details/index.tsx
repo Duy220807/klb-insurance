@@ -63,7 +63,7 @@ const VehicleDetails = () => {
             {/* Nội dung chính với padding để tránh bị che */}
             <View className="pt-32 pb-20 min-h-screen">
                 <View className="m-4">
-                    <View className="border-left block mb-8">
+                    <View className="border-left block mb-6">
                         <Text className="text-base mb-1 block">Thông tin chi tiết xe</Text>
                         <Text className="text-xs font-normal text-gray-500 block">
                             Nhập các thông tin bắt buộc (*) theo Giấy đăng ký của xe được bảo hiểm

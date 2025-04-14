@@ -137,7 +137,7 @@ const InsuranceForm = () => {
             {/* Nội dung chính với padding để tránh bị che */}
             <View className="pt-32 pb-20 min-h-screen">
                 <View className="m-4">
-                    <View className="border-left block mb-8">
+                    <View className="border-left block mb-6">
                         <Text className="text-base mb-1 block">Thông tin bảo hiểm</Text>
                         <Text className="text-xs font-normal text-gray-500 block">
                             Nhập các thông tin bắt buộc (*) để bảo hiểm xe
@@ -260,7 +260,7 @@ const InsuranceForm = () => {
                 </View>
                 <View className="shadow-sm h-2" style={{ backgroundColor: '#3333331A' }} />
                 <View className="m-4">
-                    <View className="border-left block mb-8">
+                    <View className="border-left block mb-6">
                         <Text className="text-base mb-1 block">Thông tin phí bảo hiểm</Text>
                         <Text className="text-xs font-normal text-gray-500 block">
                             Xác nhận các thông tin về phí mua bảo hiểm

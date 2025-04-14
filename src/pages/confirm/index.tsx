@@ -95,7 +95,7 @@ const InsuranceConfirmation = () => {
             <View className="pt-32 pb-20 min-h-screen">
                 <View className="m-4">
                     {/* Thông tin bên mua bảo hiểm */}
-                    <View className="border-left block mb-8">
+                    <View className="border-left block mb-6">
                         <Text className="text-base mb-1 block">Thông tin bên mua bảo hiểm</Text>
                         <Text className="text-xs font-normal text-gray-500 block">
                             Xác nhận các thông tin của bên mua bảo hiểm
