@@ -41,6 +41,11 @@ const MotorcycleInsuranceContent: React.FC<MotorcycleInsuranceContentProps> = ({
     duration,
     background,
 }) => {
+    // Lấy query parameters từ URL
+    const instance = Taro.getCurrentInstance();
+    const query = instance?.router?.params || {};
+    const providerId = query.providerId as string; // Lấy providerId từ query params
+
     const handleRegister = () => {
         const currentPage = Taro.getCurrentInstance();
         const currentPath = currentPage?.router?.path || '';
@@ -48,7 +53,7 @@ const MotorcycleInsuranceContent: React.FC<MotorcycleInsuranceContentProps> = ({
         const pathParts = pathWithoutQuery.split('/');
         const pageName = pathParts[pathParts.length - 1];
         const type = pageName.replace('about-', '');
-        const registerUrl = `/pages/register?type=${type}`;
+        const registerUrl = `/pages/register?type=${type}&providerId=${providerId}`;
         console.log('Register URL:', registerUrl);
         navigateToPage(registerUrl);
     };

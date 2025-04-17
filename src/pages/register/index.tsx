@@ -11,9 +11,11 @@ import Taro from '@tarojs/taro';
 import './index.scss';
 import Step from 'src/componnents/Steps';
 import { navigateToPage } from 'src/utils/navigate';
+import InsuranceService from 'src/services/InsuranceService';
 
 const InsuranceForm = () => {
     const [vehicleType, setVehicleType] = useState('');
+    const [vehicleTypes, setVehicleTypes] = useState([]);
     const [insuranceLevel, setInsuranceLevel] = useState('');
     const [participants, setParticipants] = useState(1);
     const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
@@ -23,6 +25,7 @@ const InsuranceForm = () => {
     const [thirdPartyInsurance, setThirdPartyInsurance] = useState(true);
     const [purpose, setPurpose] = useState('Xe không kinh doanh');
     const [brand, setBrand] = useState('');
+    const [brandOptions, setBrandOptions] = useState([]);
     const [model, setModel] = useState('');
     const [loadCapacity, setLoadCapacity] = useState('');
     const [seatingCapacity, setSeatingCapacity] = useState('');
@@ -38,8 +41,8 @@ const InsuranceForm = () => {
 
     const currentPage = Taro.getCurrentInstance();
     const type = currentPage?.router?.params?.type || '';
+    const providerId = currentPage?.router?.params?.providerId || '';
 
-    const vehicleTypes = ['Xe máy', 'Ô tô', 'Xe tải'];
     const insuranceLevels = ['Mức bảo vệ 1', 'Mức bảo vệ 2', 'Mức bảo vệ 3'];
     const durationOptions = [
         { id: 'duration-1', value: 1, label: '1 năm' },
@@ -50,8 +53,66 @@ const InsuranceForm = () => {
         { id: 'purpose-1', value: 'Xe kinh doanh', label: 'Xe kinh doanh' },
         { id: 'purpose-2', value: 'Xe không kinh doanh', label: 'Xe không kinh doanh' },
     ];
-    const brandOptions = ['Toyota', 'Honda', 'Ford', 'Hyundai', 'VinFast'];
     const modelOptions = ['Sedan', 'SUV', 'Pickup', 'Hatchback'];
+
+    // Ánh xạ purpose sang giá trị API
+    const mapPurposeToApiValue = (purposeValue) => {
+        return purposeValue === 'Xe không kinh doanh' ? 'NON_BUSINESS' : 'BUSINESS';
+    };
+
+    // Gọi API để lấy vehicleTypes
+    useEffect(() => {
+        if (!providerId || !type) {
+            console.error('Thiếu providerId hoặc type trong URL');
+            Taro.showToast({
+                title: 'Lỗi: Thiếu thông tin providerId hoặc type',
+                icon: 'error',
+            });
+            return;
+        }
+
+        const purposeApiValue = mapPurposeToApiValue(purpose);
+
+        InsuranceService.getVehicleTypes(providerId, type, purposeApiValue)
+            .then((response) => {
+                const vehicleTypesData = response?.vehicleTypes || [];
+                const vehicleTypesList = vehicleTypesData.map((vt) => vt.name);
+                setVehicleTypes(vehicleTypesList);
+            })
+            .catch((error) => {
+                console.error('Lỗi khi lấy vehicleTypes:', error);
+            });
+    }, [providerId, type, purpose]);
+
+    // Reset vehicleType khi purpose thay đổi
+    useEffect(() => {
+        setVehicleType(''); // Reset vehicleType về rỗng khi purpose thay đổi
+    }, [purpose]);
+
+    // Gọi API để lấy brandOptions
+    useEffect(() => {
+        if (!providerId || !type) {
+            setBrandOptions([]);
+            return;
+        }
+
+        const vehicleTypeCode = type.toUpperCase();
+        if (!vehicleTypeCode) {
+            setBrandOptions([]);
+            return;
+        }
+
+        InsuranceService.getVehicleManufactures(providerId, vehicleTypeCode)
+            .then((response) => {
+                const manufacturesData = response?.vehicleManufactures || [];
+                const brandOptionsList = manufacturesData.map((m) => m.name);
+                setBrandOptions(brandOptionsList);
+            })
+            .catch((error) => {
+                console.error('Lỗi khi lấy brandOptions:', error);
+                setBrandOptions([]);
+            });
+    }, [providerId, type]);
 
     useEffect(() => {
         if (startDate) {
@@ -148,6 +209,7 @@ const InsuranceForm = () => {
                         placeholder="Loại xe"
                         options={vehicleTypes}
                         onChange={setVehicleType}
+                        value={vehicleType} // Đảm bảo CustomPicker hiển thị giá trị được reset
                         required
                     />
                     {type === 'car' && (
@@ -197,30 +259,43 @@ const InsuranceForm = () => {
                             </View>
                         </>
                     )}
-                    <View className="flex flex-row items-center justify-between mt-4">
-                        <Text className="text-base block">Bảo hiểm tai nạn người ngồi trên xe</Text>
-                        <Switch
-                            checked={thirdPartyInsurance}
-                            onChange={(e) => setThirdPartyInsurance(e.detail.value)}
-                            color="#34C759"
-                        />
-                    </View>
-                    <View className="mt-4">
-                        <CustomPicker
-                            title={'Chọn mức bảo vệ'}
-                            placeholder="Mức bảo vệ"
-                            options={insuranceLevels}
-                            onChange={setInsuranceLevel}
-                            required
-                        />
-                    </View>
-                    <View className="mt-4">
-                        <CustomInput
-                            placeholder="Số người tham gia"
-                            value={participants.toString()}
-                            onChange={handleParticipantsChange}
-                            required
-                        />
+                    <View>
+                        <View className="flex flex-row items-center justify-between mt-4">
+                            <Text className="text-base block">Bảo hiểm tai nạn người ngồi trên xe</Text>
+                            <Switch
+                                checked={thirdPartyInsurance}
+                                onChange={(e) => {
+                                    const newValue = e.detail.value;
+                                    setThirdPartyInsurance(newValue);
+                                    if (!newValue) {
+                                        setInsuranceLevel('');
+                                        setParticipants(1);
+                                    }
+                                }}
+                                color="#34C759"
+                            />
+                        </View>
+                        {thirdPartyInsurance && (
+                            <>
+                                <View className="mt-4">
+                                    <CustomPicker
+                                        title={'Chọn mức bảo vệ'}
+                                        placeholder="Mức bảo vệ"
+                                        options={insuranceLevels}
+                                        onChange={setInsuranceLevel}
+                                        required
+                                    />
+                                </View>
+                                <View className="mt-4">
+                                    <CustomInput
+                                        placeholder="Số người tham gia"
+                                        value={participants.toString()}
+                                        onChange={handleParticipantsChange}
+                                        required
+                                    />
+                                </View>
+                            </>
+                        )}
                     </View>
                 </View>
                 <View className="m-4">

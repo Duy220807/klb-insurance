@@ -1,0 +1,17 @@
+export declare const getProviders: () => Promise<any>;
+export declare const getProviderProducts: (providerId: string) => Promise<any>;
+export declare const getSuggestingProducts: () => Promise<any>;
+export declare const getVehicleTypes: (providerId: string, type: string, purpose: string) => Promise<any>;
+export declare const getVehicleManufactures: (providerId: string, vehicleTypeCode: string) => Promise<any>;
+export declare const getVehicleBrands: (manufactureId: string, vehicleTypeCode: string) => Promise<any>;
+export declare const calculateInsurance: (payload: any) => Promise<any>;
+export declare const uploadVehicleImages: (payload: any) => Promise<any>;
+export declare const createContract: (payload: any) => Promise<any>;
+export declare const updateContract: (code: string, payload: any) => Promise<any>;
+export declare const deleteContract: (code: string) => Promise<any>;
+export declare const getContract: (code: string) => Promise<any>;
+export declare const payContract: (payload: any) => Promise<any>;
+export declare const issueCertificate: (code: string, payload: any) => Promise<any>;
+export declare const getProvinces: (providerId: string) => Promise<any>;
+export declare const getDistricts: (provinceId: string) => Promise<any>;
+export declare const getWards: (districtId: string) => Promise<any>;

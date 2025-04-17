@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro';
 
-const requestCallbacks = new Map<string, { resolve: (value: any) => void; reject: (reason: any) => void }>();
+const requestCallbacks = new Map();
 let callbackIdCounter = 0;
 let isBridgeSetup = false;
 
@@ -18,7 +18,7 @@ export function setupTaroFlutterBridge() {
 
     const originalRequest = Taro.request;
 
-    Taro.request_ = (action: string, options: any) => {
+    Taro.request_ = (action, options) => {
         if (!options || !options.url || !options.method) {
             return Promise.reject(new Error('Invalid options: url and method are required.'));
         }
@@ -46,26 +46,35 @@ export function setupTaroFlutterBridge() {
 
             const callApiDirectly = () => {
                 console.log('Gọi API trực tiếp');
+                // Thêm API_URL từ biến môi trường nếu url không bắt đầu bằng http:// hoặc https://
+                const apiUrl = process.env.API_URL || '';
+                const url = options.url.startsWith('http://') || options.url.startsWith('https://')
+                    ? options.url
+                    : `${apiUrl}${options.url}`;
+
                 originalRequest({
-                    url: options.url,
+                    url,
                     method: options.method,
                     data: options.data,
                     header: options.headers,
                     success: (res) => {
+                        // Gửi dữ liệu thô từ BE, chỉ thêm callbackId để xử lý
                         const response = {
                             callbackId,
-                            status: 'SUCCESS',
-                            data: res.data,
-                            code: res.statusCode,
+                            rawResponse: res.data, // Lưu dữ liệu thô từ BE (bao gồm status, code, message, data)
                         };
                         window.onBridgeMessage(JSON.stringify(response));
                     },
                     fail: (err) => {
+                        // Khi lỗi, trả về một response với định dạng tương tự BE
                         const response = {
                             callbackId,
-                            status: 'ERROR',
-                            code: 500,
-                            message: err.errMsg,
+                            rawResponse: {
+                                status: "ERROR",
+                                code: "API_FAILED",
+                                message: err.errMsg || 'Request failed',
+                                data: null,
+                            },
                         };
                         window.onBridgeMessage(JSON.stringify(response));
                     },
@@ -104,11 +113,11 @@ export function setupTaroFlutterBridge() {
         });
     };
 
-    window.onBridgeMessage = (responseStr: string) => {
+    window.onBridgeMessage = (responseStr) => {
         try {
             const response = JSON.parse(responseStr);
             console.log('Response:', response);
-            const { callbackId, status, code, message, data } = response;
+            const { callbackId, rawResponse } = response;
             const callback = requestCallbacks.get(callbackId);
 
             if (!callback) {
@@ -118,10 +127,15 @@ export function setupTaroFlutterBridge() {
 
             requestCallbacks.delete(callbackId);
 
-            if (status !== 'SUCCESS') {
-                callback.reject({ message, code });
+            // Kiểm tra status từ response của BE
+            if (rawResponse.status !== 'SUCCESS') {
+                callback.reject({
+                    message: rawResponse.message || 'Request failed',
+                    code: rawResponse.code,
+                });
             } else {
-                callback.resolve({ data, code, status });
+                // Trả về toàn bộ response từ BE (bao gồm status, code, message, data)
+                callback.resolve(rawResponse);
             }
         } catch (err) {
             console.error('Failed to handle Flutter response:', err);

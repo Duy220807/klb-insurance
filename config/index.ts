@@ -1,9 +1,9 @@
 import { defineConfig, type UserConfigExport } from '@tarojs/cli';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
-import webpack from 'webpack'; // Thêm import webpack
+import webpack from 'webpack';
 import devConfig from './dev';
 import prodConfig from './prod';
-import uatConfig from './uat'; // Thêm import uatConfig
+import uatConfig from './uat';
 
 export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
   const baseConfig: UserConfigExport<'webpack5'> = {
@@ -69,11 +69,10 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
           },
         });
 
-        // Thêm cấu hình stats để lọc bỏ cảnh báo
         chain.stats({
           warningsFilter: [
-            /sass-loader/, // Bỏ qua các cảnh báo từ sass-loader
-            /@import/, // Bỏ qua các cảnh báo liên quan đến @import
+            /sass-loader/,
+            /@import/,
           ],
         });
       },
@@ -106,7 +105,6 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
       webpackChain(chain) {
         chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin);
 
-        // Bỏ qua process và node:process
         chain.merge({
           resolve: {
             fallback: {
@@ -116,24 +114,23 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
           },
         });
 
-        // Đảm bảo process.env được định nghĩa trong runtime
         chain.plugin('define').use(webpack.DefinePlugin, [
           {
             'process.env': JSON.stringify({
               TARO_APP_ID: process.env.TARO_APP_ID || '',
               TARO_APP_API: process.env.TARO_APP_API || '',
-              NODE_ENV: process.env.NODE_ENV || mode || 'development', // Thêm NODE_ENV vào runtime
+              API_URL: process.env.API_URL || 'http://localhost:8999/api',
+              NODE_ENV: process.env.NODE_ENV || mode || 'development',
             }),
           },
         ]);
 
-        // Thêm cấu hình stats để lọc bỏ cảnh báo
         chain.stats({
           warningsFilter: [
-            /sass-loader/, // Bỏ qua các cảnh báo từ sass-loader
-            /@import/, // Bỏ qua các cảnh báo liên quan đến @import
-            /DefinePlugin/, // Bỏ qua các cảnh báo từ DefinePlugin
-            /Critical dependency: the request of a dependency is an expression/, // Bỏ qua cảnh báo liên quan đến process.env
+            /sass-loader/,
+            /@import/,
+            /DefinePlugin/,
+            /Critical dependency: the request of a dependency is an expression/,
           ],
         });
       },
@@ -148,7 +145,6 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
     },
   };
 
-  // Sử dụng mode (từ --env) để chọn file cấu hình
   if (mode === 'uat') {
     console.log('Sử dụng cấu hình UAT từ config/uat.js');
     return merge({}, baseConfig, uatConfig);

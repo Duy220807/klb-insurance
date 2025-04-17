@@ -15,22 +15,40 @@ import icon from './../../assets/icons/icon.svg';
 import { navigateToPage } from 'src/utils/navigate';
 import InsuranceCard from 'src/componnents/InsuranceCard';
 import HomeSkeleton from 'src/componnents/Skeletons/home';
-// import { sendMessageToFlutter } from 'src/utils/flutterMessageSender';
-// import { color, message } from 'src/utils/flutterConstants';
+import InsuranceService from 'src/services/InsuranceService';
 
 export default class Index extends Component<PropsWithChildren> {
   state = {
     loading: true,
+    providers: [],
   };
 
   componentDidMount() {
-    // // Gửi message showAppBar lên Flutter khi ứng dụng hiển thị
-    // console.log('Gửi message showAppBar lên Flutter');
-    // sendMessageToFlutter(message.showAppBar, { color: color.colorShowAppBarHome });
-    setTimeout(() => {
-      this.setState({ loading: false });
-    }, 1000);
+    this.fetchProviders();
   }
+
+  fetchProviders = () => {
+    // Đặt loading thành true trước khi gọi API
+    this.setState({ loading: true });
+
+    InsuranceService.getProviders()
+      .then((response) => {
+        console.log(response);
+        const providers = response?.providers || [];
+        this.setState({
+          providers: providers.map((provider) => ({
+            name: provider.name,
+            logo: provider.logo || icon,
+            url: `/pages/protect?providerId=${provider.id}`,
+          })),
+          loading: false, // Đặt loading thành false khi API thành công
+        });
+      })
+      .catch((error) => {
+        console.error('Lỗi khi lấy danh sách nhà cung cấp:', error);
+        this.setState({ loading: false }); // Đặt loading thành false khi API thất bại
+      });
+  };
 
   componentWillUnmount() { }
 
@@ -64,19 +82,19 @@ export default class Index extends Component<PropsWithChildren> {
       title: 'Chỉ từ ',
       price: '65.000 VNĐ',
       image: BaoHiemXeMay,
-      url: '/pages/about-motorbike', // Thêm url cho sản phẩm xe máy
+      url: '/pages/about-motorbike',
     },
     {
       title: 'Chỉ từ ',
       price: '120.000 VNĐ',
       image: BaoHiemOto,
-      url: '/pages/about-car', // Thêm url cho sản phẩm ô tô
+      url: '/pages/about-car',
     },
   ];
 
   pendingPayments = [
     {
-      id: 'payment-001', // Thêm id
+      id: 'payment-001',
       name: 'BH VCX xe máy',
       contractNumber: '000052***',
       brand: 'Bảo Hiểm Bảo Minh',
@@ -84,24 +102,6 @@ export default class Index extends Component<PropsWithChildren> {
       dueDate: '29/3/2025',
       icon: Contract,
     },
-  ];
-
-  insuranceProviders = [
-    {
-      name: 'Bảo Minh',
-      logo: icon,
-      url: '/pages/protect?provider=BaoMinh', // Thêm url cho nhà cung cấp
-    },
-    // {
-    //   name: 'Bảo Việt',
-    //   logo: icon,
-    //   url: '/pages/provider-detail?provider=BaoViet', // Thêm url (đã comment)
-    // },
-    // {
-    //   name: 'Prudential',
-    //   logo: icon,
-    //   url: '/pages/provider-detail?provider=Prudential', // Thêm url (đã comment)
-    // },
   ];
 
   calculateDaysLeft(dueDate: any) {
@@ -121,11 +121,11 @@ export default class Index extends Component<PropsWithChildren> {
   };
 
   handlePendingPaymentClick = (contractNumber: string) => {
-    navigateToPage(`/pages/contract-detail?contractNumber=${contractNumber}`); // Điều hướng với id
+    navigateToPage(`/pages/contract-detail?contractNumber=${contractNumber}`);
   };
 
   render() {
-    const { loading } = this.state;
+    const { loading, providers } = this.state;
 
     if (loading) {
       return <HomeSkeleton />;
@@ -173,7 +173,7 @@ export default class Index extends Component<PropsWithChildren> {
               <View
                 key={index}
                 className="flex flex-col items-center w-75 bg-white mr-2"
-                onClick={() => navigateToPage(product.url)} // Sử dụng url để điều hướng
+                onClick={() => navigateToPage(product.url)}
               >
                 <Image src={product.image} className="w-75 h-30" />
                 <View className="w-full text-left px-2 pl-4">
@@ -204,7 +204,7 @@ export default class Index extends Component<PropsWithChildren> {
             {this.pendingPayments.map((payment, index) => (
               <View
                 key={index}
-                onClick={() => this.handlePendingPaymentClick(payment.contractNumber)} // Thêm sự kiện onClick
+                onClick={() => this.handlePendingPaymentClick(payment.contractNumber)}
               >
                 <InsuranceCard
                   name={payment.name}
@@ -224,11 +224,11 @@ export default class Index extends Component<PropsWithChildren> {
           <View className="p-4 bg-white mb-4">
             <Text className="text-base ">Đơn vị bảo hiểm</Text>
             <View className="flex flex-row overflow-x-scroll mt-4 hide-scrollbar">
-              {this.insuranceProviders.map((provider, index) => (
+              {providers.map((provider: any, index) => (
                 <View
                   key={index}
                   className="flex flex-col items-center w-24 mr-4 bg-white"
-                  onClick={() => navigateToPage(provider.url)} // Sử dụng url để điều hướng
+                  onClick={() => navigateToPage(provider.url)}
                 >
                   <Image src={provider.logo} className="w-12 h-12" />
                   <Text className="text-xs text-gray-800 mt-2 text-center">{provider.name}</Text>

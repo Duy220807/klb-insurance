@@ -9,7 +9,9 @@ import Header from 'src/componnents/Header';
 import CustomModal from 'src/componnents/CustomModal';
 import { navigateToPage } from 'src/utils/navigate';
 import InsuranceListSkeleton from 'src/componnents/Skeletons/protect';
+import InsuranceService from 'src/services/InsuranceService';
 
+// Mock data tạm thời, sẽ thay bằng dữ liệu từ API
 const insuranceProducts = [
     { id: 'car-material', title: 'Bảo hiểm Vật chất', subtitle: 'Xe ô tô', icon: CarIcon, url: '/pages/about-car-damage' },
     { id: 'motorcycle-liability', title: 'Bảo hiểm TNDS bắt buộc', subtitle: 'Xe máy', icon: MotorcycleIcon, url: '/pages/about-motorbike' },
@@ -20,15 +22,57 @@ const ProtectPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedProductId, setSelectedProductId] = useState('');
     const [loading, setLoading] = useState(true);
+    const [products, setProducts] = useState(insuranceProducts);
 
-    // Giả lập thời gian tải dữ liệu với setTimeout
+    // Lấy providerId từ URL và gọi API
     useEffect(() => {
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
+        // Lấy query parameters từ URL
+        const instance = Taro.getCurrentInstance();
+        const query = instance?.router?.params || {};
+        let providerId = query.providerId as string; // Lấy providerId từ query params
+
+        // Nếu không có providerId, sử dụng giá trị mặc định
+        if (!providerId) {
+            console.warn('Không tìm thấy providerId trong URL, sử dụng giá trị mặc định');
+            providerId = '123e4567-e89b-12d3-a456-426614174000';
+        }
+
+        // Gọi API với providerId
+        InsuranceService.getProviderProducts(providerId)
+            .then((response) => {
+                console.log('Dữ liệu từ API:', response.providerProducts);
+                const fetchedProducts = response?.providerProducts?.map((product: any) => {
+                    // Lưu productType đã chuyển thành chữ thường
+                    const type = product.productType.toLowerCase();
+                    return {
+                        id: product.id,
+                        title: product.name,
+                        subtitle: product.description,
+                        icon: type === 'moto' ? MotorcycleIcon : CarIcon,
+                        url: `/pages/about-${type === 'moto'
+                            ? 'motorbike'
+                            : type === 'car'
+                                ? 'car'
+                                : 'car-damage'
+                            }?providerId=${providerId}`,
+                    };
+                });
+
+                setProducts(fetchedProducts);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error('Lỗi khi lấy danh sách sản phẩm:', error);
+                Taro.showToast({
+                    title: 'Lỗi: ' + error.message,
+                    icon: 'error',
+                });
+                setLoading(false);
+            });
     }, []);
 
     const handleNavigate = (url: string) => {
+        console.log('Điều hướng đến:', url); // Thêm log để kiểm tra URL
         navigateToPage(url);
     };
 
@@ -43,9 +87,9 @@ const ProtectPage = () => {
     };
 
     const handleSelectInsurance = (insuranceName: string) => {
-        const product = insuranceProducts.find(p => p.id === selectedProductId);
+        const product = products.find(p => p.id === selectedProductId);
         if (product) {
-            console.log(`Đã chọn: ${insuranceName} cho ${product.title}`);
+            console.log(`Đã chọn: ${insuranceName} cho ${product.title}, URL: ${product.url}`);
             handleNavigate(product.url);
         }
         closeModal();
@@ -53,7 +97,6 @@ const ProtectPage = () => {
 
     return (
         <View className="flex flex-col min-h-screen">
-            {/* Header fixed ở top */}
             <View
                 className="fixed top-0 left-0 right-0 bg-white shadow-bottom"
                 style={{ zIndex: 10 }}
@@ -61,16 +104,14 @@ const ProtectPage = () => {
                 <Header title="Sản phẩm bảo hiểm" />
             </View>
 
-            {/* Nội dung chính với padding để tránh bị che bởi header */}
             <View className="pt-16">
                 <View className="p-4">
-                    {/* Tiêu đề "Danh sách sản phẩm" luôn hiển thị */}
                     <Text className="text-base">Danh sách sản phẩm</Text>
                     <View className="mt-4">
                         {loading ? (
-                            <InsuranceListSkeleton /> // Hiển thị skeleton khi đang loading
+                            <InsuranceListSkeleton />
                         ) : (
-                            insuranceProducts.map(product => (
+                            products.map(product => (
                                 <View
                                     key={product.id}
                                     className="flex flex-row items-center justify-between bg-white p-4 mb-3 rounded-sm shadow"
@@ -91,7 +132,6 @@ const ProtectPage = () => {
                 </View>
             </View>
 
-            {/* Modal */}
             <CustomModal isOpened={isModalOpen} onClose={closeModal} onSelect={handleSelectInsurance} />
         </View>
     );
